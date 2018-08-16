@@ -1,7 +1,7 @@
 # -TFG
 
 ***
-AndroidApp
-RaspberryScripts
-TFG - Document
+* AndroidApp
+* RaspberryScripts
+* TFG - Document
 ***
