@@ -21,7 +21,7 @@ import java.util.UUID;
 
 public class MainActivity extends Activity {
 
-    Button btnOn, btnOff, btnMap;
+    Button btnOn, btnOff;
     Handler bluetoothIn;
 
     final int handlerState = 0;        				 //used to identify handler message
@@ -46,7 +46,6 @@ public class MainActivity extends Activity {
         //Link the buttons and textViews to respective views
         btnOn = (Button) findViewById(R.id.buttonOn);
         btnOff = (Button) findViewById(R.id.buttonOff);
-        btnMap = (Button) findViewById(R.id.viewMap);
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();       // get Bluetooth adapter
         checkBTState();
@@ -64,14 +63,6 @@ public class MainActivity extends Activity {
             }
         });
 
-        btnMap.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Make an intent to start next activity while taking an extra which is the MAC address.
-                Intent i = new Intent(MainActivity.this, MapsActivity.class);
-                startActivity(i);
-            }
-        });
     }
 
 
