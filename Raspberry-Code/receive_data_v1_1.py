@@ -6,6 +6,10 @@ GPIO.setwarnings(False)
 GPIO.setup(3, GPIO.OUT)
 GPIO.output(3, 0)
 
+print("\n\n*************************************************************************")
+print("*\tWelcome!! Try to connect via bluetooth to start the main app\t*")
+print("*************************************************************************\n")
+
 #Functions
 def Leds():
     while True:
@@ -18,7 +22,7 @@ def Leds():
             GPIO.output(3, GPIO.HIGH)
             print("LED on")
         if data == "q":
-            print("LEds Exit")
+            print("Bluetooth Disconnected\n\n")
             break
 
 #Main Loop

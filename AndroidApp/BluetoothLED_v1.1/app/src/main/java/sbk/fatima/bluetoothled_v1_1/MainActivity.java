@@ -21,7 +21,8 @@ import java.util.UUID;
 
 public class MainActivity extends Activity {
 
-    Button btnOn, btnOff;
+    Button btnOn, btnOff, btnDisconnect;
+    TextView currentSpeed, MaxSpeed;
     Handler bluetoothIn;
 
     final int handlerState = 0;        				 //used to identify handler message
@@ -30,7 +31,7 @@ public class MainActivity extends Activity {
 
     private ConnectedThread mConnectedThread;
 
-    // SPP UUID service - this should work for most devices
+    //SPP UUID service - this should work for most devices
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     //UUID SERIAL_UUID = device.getUuids()[0].getUuid(); //if you don't know the UUID of the bluetooth device service, you can get it like this from android cache
 
@@ -46,6 +47,9 @@ public class MainActivity extends Activity {
         //Link the buttons and textViews to respective views
         btnOn = (Button) findViewById(R.id.buttonOn);
         btnOff = (Button) findViewById(R.id.buttonOff);
+        btnDisconnect = (Button) findViewById(R.id.ButtonDisconnect);
+        currentSpeed = (TextView) findViewById(R.id.speed);
+        //MaxSpeed = (TextView) findViewById(R.id.Max);
 
         btAdapter = BluetoothAdapter.getDefaultAdapter();       // get Bluetooth adapter
         checkBTState();
@@ -63,6 +67,14 @@ public class MainActivity extends Activity {
             }
         });
 
+        btnDisconnect.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mConnectedThread.write("q");
+                onPause();
+                finish();
+            }
+        });
     }
 
 
@@ -135,6 +147,7 @@ public class MainActivity extends Activity {
         super.onPause();
         try
         {
+            System.out.println("Bluetooth socket closed");
             //Don't leave Bluetooth sockets open when leaving activity
             btSocket.close();
         } catch (IOException e2) {

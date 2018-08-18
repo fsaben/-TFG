@@ -62,7 +62,6 @@ public class DeviceListActivity extends Activity {
 
     	// Add previosuly paired devices to the array
     	if (pairedDevices.size() > 0) {
-    		findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);//make title viewable
     		for (BluetoothDevice device : pairedDevices) {
     			mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
     		}
