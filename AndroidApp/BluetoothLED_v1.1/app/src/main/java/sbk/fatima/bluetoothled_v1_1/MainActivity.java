@@ -1,12 +1,19 @@
 package sbk.fatima.bluetoothled_v1_1;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -19,15 +26,16 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements LocationListener {
 
     Button btnOn, btnOff, btnDisconnect;
-    TextView currentSpeed, MaxSpeed;
+    TextView currentSpeed;
     Handler bluetoothIn;
 
-    final int handlerState = 0;        				 //used to identify handler message
+    final int handlerState = 0;                         //used to identify handler message
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
+    private LocationManager locManager = null;
 
     private ConnectedThread mConnectedThread;
 
@@ -51,7 +59,15 @@ public class MainActivity extends Activity {
         currentSpeed = (TextView) findViewById(R.id.speed);
         //MaxSpeed = (TextView) findViewById(R.id.Max);
 
+        locManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         btAdapter = BluetoothAdapter.getDefaultAdapter();       // get Bluetooth adapter
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+        }
+
+        locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+        this.onLocationChanged(null);
         checkBTState();
 
         // Set up onClick listeners for buttons to send 1 or 0 to turn on/off LED
@@ -76,7 +92,6 @@ public class MainActivity extends Activity {
             }
         });
     }
-
 
     private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
         try {
@@ -145,13 +160,23 @@ public class MainActivity extends Activity {
     public void onPause()
     {
         super.onPause();
+        try {
+            if (locManager != null) {
+                locManager.removeUpdates(this);
+                locManager = null;
+            }
+            System.out.println("Finish gps updates");
+        } catch (Exception e1){
+            System.out.println(e1);
+        }
+
         try
         {
             System.out.println("Bluetooth socket closed");
             //Don't leave Bluetooth sockets open when leaving activity
             btSocket.close();
         } catch (IOException e2) {
-            //insert code to deal with this
+            System.out.println(e2);
         }
     }
 
@@ -167,6 +192,30 @@ public class MainActivity extends Activity {
                 startActivityForResult(enableBtIntent, 1);
             }
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if(location == null){
+            currentSpeed.setText("-");
+        }else{
+            currentSpeed.setText(String.format("%.2f", location.getSpeed())); //imprimir velocidad con 2 decimales
+        }
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        System.out.println("Gps enabled");
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        System.out.println("Gps disabled");
     }
 
     //Class for connect thread
