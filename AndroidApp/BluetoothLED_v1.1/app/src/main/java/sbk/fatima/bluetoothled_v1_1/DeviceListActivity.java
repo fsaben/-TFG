@@ -1,9 +1,13 @@
 package sbk.fatima.bluetoothled_v1_1;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,6 +31,7 @@ public class DeviceListActivity extends Activity {
 
     // Member fields
     private BluetoothAdapter mBtAdapter;
+    private LocationManager locManager;
     private ArrayAdapter<String> mPairedDevicesArrayAdapter;
 
     @Override
@@ -41,6 +46,7 @@ public class DeviceListActivity extends Activity {
         super.onResume();
     	//*************** 
     	checkBTState();
+    	checkGpsState();
 
     	textView1 = (TextView) findViewById(R.id.connecting);
     	textView1.setTextSize(20);
@@ -91,7 +97,7 @@ public class DeviceListActivity extends Activity {
         // Check device has Bluetooth and that it is turned on
         mBtAdapter=BluetoothAdapter.getDefaultAdapter(); // CHECK THIS OUT THAT IT WORKS!!!
         if(mBtAdapter==null) { 
-        	Toast.makeText(getBaseContext(), "El dispositivo no soporta Bluetooth", Toast.LENGTH_SHORT).show();
+        	System.out.println("El dispositivo no soporta Bluetooth");
         } else {
             if (mBtAdapter.isEnabled()) {
             } else {
@@ -100,6 +106,26 @@ public class DeviceListActivity extends Activity {
                 startActivityForResult(enableBtIntent, 1);
  
             }
+        }
+    }
+
+    private void checkGpsState() {
+        locManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        } else {
+            AlertDialog.Builder constructor = new AlertDialog.Builder(this);
+            constructor.setCancelable(false);
+            constructor.setTitle("GPS desactivado");
+            constructor.setMessage("El GPS esta desactivado, es necesario el GPS para obtener la velocidad");
+            constructor.setPositiveButton("Ajustes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    Intent enableGps = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivityForResult(enableGps, 1);
+                }
+            });
+            constructor.show();
         }
     }
 }

@@ -2,10 +2,12 @@ package sbk.fatima.bluetoothled_v1_1;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -32,7 +34,6 @@ public class MainActivity extends Activity implements LocationListener {
     TextView currentSpeed;
     Handler bluetoothIn;
 
-    final int handlerState = 0;                         //used to identify handler message
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
     private LocationManager locManager = null;
@@ -57,7 +58,6 @@ public class MainActivity extends Activity implements LocationListener {
         btnOff = (Button) findViewById(R.id.buttonOff);
         btnDisconnect = (Button) findViewById(R.id.ButtonDisconnect);
         currentSpeed = (TextView) findViewById(R.id.speed);
-        //MaxSpeed = (TextView) findViewById(R.id.Max);
 
         locManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         btAdapter = BluetoothAdapter.getDefaultAdapter();       // get Bluetooth adapter
@@ -68,6 +68,7 @@ public class MainActivity extends Activity implements LocationListener {
 
         locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
         this.onLocationChanged(null);
+        checkGpsState();
         checkBTState();
 
         // Set up onClick listeners for buttons to send 1 or 0 to turn on/off LED
@@ -138,14 +139,12 @@ public class MainActivity extends Activity implements LocationListener {
         {
             btSocket.connect();
             System.out.println("Connected");
-        } catch (IOException e) {
-            System.out.println("Error: " + e);
-            try
-            {
+        } catch (IOException e1) {
+            System.out.println(e1);
+            try {
                 btSocket.close();
-            } catch (IOException e2)
-            {
-                //insert code to deal with this
+            } catch (IOException e2) {
+                System.out.println(e2);
             }
         }
         mConnectedThread = new ConnectedThread(btSocket);
@@ -153,7 +152,7 @@ public class MainActivity extends Activity implements LocationListener {
 
         //I send a character when resuming.beginning transmission to check device is connected
         //If it is not an exception will be thrown in the write method and finish() will be called
-        mConnectedThread.write("x");
+        mConnectedThread.write("0");
     }
 
     @Override
@@ -166,15 +165,16 @@ public class MainActivity extends Activity implements LocationListener {
                 locManager = null;
             }
             System.out.println("Finish gps updates");
+
         } catch (Exception e1){
             System.out.println(e1);
         }
 
-        try
-        {
+        try {
             System.out.println("Bluetooth socket closed");
             //Don't leave Bluetooth sockets open when leaving activity
             btSocket.close();
+
         } catch (IOException e2) {
             System.out.println(e2);
         }
@@ -194,6 +194,26 @@ public class MainActivity extends Activity implements LocationListener {
         }
     }
 
+    private void checkGpsState() {
+        locManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+        } else {
+            AlertDialog.Builder constructor = new AlertDialog.Builder(this);
+            constructor.setCancelable(false);
+            constructor.setTitle("GPS desactivado");
+            constructor.setMessage("El GPS esta desactivado, es necesario el GPS para obtener la velocidad");
+            constructor.setPositiveButton("Setting", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    Intent enableGps = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivityForResult(enableGps, 1);
+                }
+            });
+            constructor.show();
+        }
+    }
+
     @Override
     public void onLocationChanged(Location location) {
         if(location == null){
@@ -206,6 +226,7 @@ public class MainActivity extends Activity implements LocationListener {
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
+        checkGpsState();
     }
 
     @Override
@@ -216,6 +237,7 @@ public class MainActivity extends Activity implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
         System.out.println("Gps disabled");
+        checkGpsState();
     }
 
     //Class for connect thread
@@ -238,22 +260,6 @@ public class MainActivity extends Activity implements LocationListener {
             mmOutStream = tmpOut;
         }
 
-        public void run() {
-            byte[] buffer = new byte[256];
-            int bytes;
-
-            // Keep looping to listen for received messages
-            while (true) {
-                try {
-                    bytes = mmInStream.read(buffer);        	//read bytes from input buffer
-                    String readMessage = new String(buffer, 0, bytes);
-                    // Send the obtained bytes to the UI Activity via handler
-                    bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
-                } catch (IOException e) {
-                    break;
-                }
-            }
-        }
         //write method
         public void write(String input) {
             byte[] msgBuffer = input.getBytes();           //converts entered String into bytes
