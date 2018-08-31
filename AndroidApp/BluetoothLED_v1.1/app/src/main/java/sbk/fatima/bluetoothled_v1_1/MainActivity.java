@@ -31,7 +31,7 @@ import java.util.UUID;
 public class MainActivity extends Activity implements LocationListener {
 
     Button btnOn, btnOff, btnDisconnect;
-    TextView currentSpeed;
+    TextView currentSpeed, ledStatus;
     Handler bluetoothIn;
 
     private BluetoothAdapter btAdapter = null;
@@ -58,6 +58,7 @@ public class MainActivity extends Activity implements LocationListener {
         btnOff = (Button) findViewById(R.id.buttonOff);
         btnDisconnect = (Button) findViewById(R.id.ButtonDisconnect);
         currentSpeed = (TextView) findViewById(R.id.speed);
+        ledStatus = (TextView) findViewById(R.id.ledStatus);
 
         locManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         btAdapter = BluetoothAdapter.getDefaultAdapter();       // get Bluetooth adapter
@@ -75,12 +76,14 @@ public class MainActivity extends Activity implements LocationListener {
         btnOff.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 mConnectedThread.write("0");    // Send "0" via Bluetooth
+                ledStatus.setText("OFF");
             }
         });
 
         btnOn.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 mConnectedThread.write("1");    // Send "1" via Bluetooth
+                ledStatus.setText("ON");
             }
         });
 

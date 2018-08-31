@@ -23,8 +23,8 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="?android:attr/colorAccent"
-                android:text="LED OFF"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:text="LED OFF" />
 
             <Button
                 android:id="@+id/buttonOn"
@@ -33,14 +33,15 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="?android:attr/colorAccent"
-                android:text="LED ON"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:text="LED ON" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <TextView
@@ -48,12 +49,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="20sp"
                 android:text="Estado del LED:" />
             <TextView
                 android:id="@+id/ledStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="20sp"
                 android:text="OFF" />
         </LinearLayout>
 
@@ -68,9 +73,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Velocidad: "
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="35dp" />
+                android:textSize="35sp"
+                android:text="Velocidad: " />
 
             <TextView
                 android:id="@+id/speed"
@@ -78,19 +83,19 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:text="0"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="35dp"
-                android:textStyle="bold" />
+                android:textSize="35sp"
+                android:textStyle="bold"
+                android:text="0" />
 
             <TextView
                 android:id="@+id/units1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="m/s"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="35dp" />
+                android:textSize="35sp"
+                android:text="m/s" />
 
         </LinearLayout>
 
@@ -104,8 +109,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@android:color/holo_red_dark"
-        android:text="Disconectar bluetooth"
         android:textColor="@android:color/white"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:text="Disconectar bluetooth" />
 
 </RelativeLayout>
