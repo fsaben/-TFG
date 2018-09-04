@@ -46,6 +46,8 @@ public class MainActivity extends Activity implements LocationListener {
 
     // String for MAC address
     private static String address = null;
+    private Float speed = null;
+    private Boolean speedState = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,7 +157,7 @@ public class MainActivity extends Activity implements LocationListener {
 
         //I send a character when resuming.beginning transmission to check device is connected
         //If it is not an exception will be thrown in the write method and finish() will be called
-        mConnectedThread.write("0");
+        mConnectedThread.write("f");
     }
 
     @Override
@@ -222,7 +224,17 @@ public class MainActivity extends Activity implements LocationListener {
         if(location == null){
             currentSpeed.setText("-");
         }else{
-            currentSpeed.setText(String.format("%.2f", location.getSpeed())); //imprimir velocidad con 2 decimales
+            speed = location.getSpeed();
+            currentSpeed.setText(String.format("%.2f", speed)); //imprimir velocidad con 2 decimales
+
+            if(speed>0.02&&!speedState) {//PONER A 1.3
+                mConnectedThread.write("t");
+                speedState = true;
+            } else if(speedState) {
+                mConnectedThread.write("f");
+                speedState = false;
+            }
+            System.out.println("Speed is " + speed + " speedState is " + speedState);
         }
 
     }
