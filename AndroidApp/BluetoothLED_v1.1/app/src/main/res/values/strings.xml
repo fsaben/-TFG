@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BluetoothLED_v1.1</string>
+    <string name="app_name">TFG</string>
     <string name="action_settings">Configuracion</string>
     <string name="hello_world">Hola Mundo</string>
     <string name="none_paired">Ningun dispositivo pudo ser emparejado</string>
