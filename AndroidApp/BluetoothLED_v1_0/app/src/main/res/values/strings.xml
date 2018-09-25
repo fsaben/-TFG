@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">BluetoothLED_v1.0</string>
-    <string name="action_settings">Configuracion</string>
-    <string name="hello_world">Hola Mundo</string>
-    <string name="none_paired">Ningun dispositivo pudo ser emparejado</string>
-    <string name="title_activity_maps">Ruta recorrida</string>
-</resources>
