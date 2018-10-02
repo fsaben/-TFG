@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TFG</string>
+    <string name="action_settings">Configuracion</string>
+    <string name="hello_world">Hola Mundo</string>
+    <string name="none_paired">Ningun dispositivo pudo ser emparejado</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="velocidad">Velocidad:</string>
+</resources>
