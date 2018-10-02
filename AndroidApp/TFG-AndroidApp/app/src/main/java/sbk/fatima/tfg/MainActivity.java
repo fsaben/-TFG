@@ -83,7 +83,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         checkGpsPermission();
 
-        locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+        locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
         this.onLocationChanged(null);
 
         checkGpsState();
@@ -234,12 +234,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         if (location == null) {
             currentSpeed.setText("-");
         } else {
-            currentposition = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(currentposition).title("Marker in current position"));
-
-            //update map
-            updateTrack(currentposition);
-
             //update speed
             speed = location.getSpeed();
             currentSpeed.setText(String.format("%.2f", speed)); //imprimir velocidad con 2 decimales
@@ -252,8 +246,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 speedState = false;
             }
             System.out.println("Speed es " + speed + " speedState es " + speedState);
-        }
 
+            //update map
+            currentposition = new LatLng(location.getLatitude(), location.getLongitude());
+            //mMap.addMarker(new MarkerOptions().position(currentposition).title("Marker in current position"));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentposition, 17));
+
+            updateTrack(currentposition);
+        }
     }
 
     @Override
@@ -279,15 +279,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         PolylineOptions polylineOptions = new PolylineOptions();
         polylineOptions.color(getResources().getColor(R.color.accent_material_light));
-        polylineOptions.width(4);
+        polylineOptions.width(5);
         gpsTrack = mMap.addPolyline(polylineOptions);
 
         checkGpsPermission();
 
         mMap.setMyLocationEnabled(true);
 
-        Location location = locManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        currentposition = new LatLng(location.getLatitude(), location.getLongitude());
+        currentposition = new LatLng(40.416764, -3.703833);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentposition, 17));
     }
 
@@ -327,6 +326,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateTrack(LatLng lastKnownLatLng) {
+        List<LatLng> points = gpsTrack.getPoints();
         points.add(lastKnownLatLng);
         gpsTrack.setPoints(points);
     }

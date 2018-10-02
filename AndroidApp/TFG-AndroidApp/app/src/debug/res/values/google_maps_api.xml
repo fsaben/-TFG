@@ -1,6 +1,5 @@
 <resources>
     <!--
-    TODO: Before you run your application, you need a Google Maps API key.
 
     To get one, follow this link, follow the directions and press "Create" at the end:
 
@@ -21,6 +20,6 @@
     string in this file.
     -->
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
-        AIzaSyB5EKQAt4b_hrCWtvsB7GG6wmRahtbDO30
+        AIzaSyDWhHFP5_cfSTYsA4NJyig__L3L9Ac2aVA
     </string>
 </resources>

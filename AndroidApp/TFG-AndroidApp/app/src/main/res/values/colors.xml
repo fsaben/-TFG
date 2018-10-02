@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="linearSeparador">#696969</color>
-    <color name="accent_material_light">#8b3175</color>
+    <color name="accent_material_light">#960084</color>
+    <color name="accent_material_light_1">#96005f</color>
+    <color name="accent_material_light_2">#960055</color>
+    <color name="accent_material_light_3">#96003e</color>
+    <color name="accent_material_light_4">#960046</color>
 </resources>
