@@ -3,5 +3,4 @@
 ***
 * AndroidApp
 * RaspberryScripts
-* TFG - Document
 ***
