@@ -1,43 +1,46 @@
 import RPi.GPIO as GPIO  
 import datetime
 import time
+
+high = []
+low = []
         
-def my_callback(channel):  
+def my_callback(channel):
+    global high, low
+
     if GPIO.input(8) == GPIO.HIGH:
-        print('\nAt ' + str(datetime.datetime.now()))
-        if GPIO.input(7) == 0:
-            GPIO.output(7, 1)  
-            print('lights on')
-            
-            time.sleep(5) #Here is the delay in the script that does not produce the desired result
-            GPIO.output(7, 0)
-            print('lights off')
-        
-        elif GPIO.input(7) ==1:
-            GPIO.output(7, 0)  
-            print('lights off')
-        
+        high.append(str(datetime.datetime.now()))
     else:
-        print('\nAt ' + str(datetime.datetime.now()))
-        print('button released')
+        low.append(str(datetime.datetime.now()))
         
 try:
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(12, GPIO.OUT)
-    GPIO.setup(7, GPIO.OUT)
     GPIO.setup(8, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.add_event_detect(8, GPIO.BOTH, callback=my_callback, bouncetime=500)
+    GPIO.add_event_detect(8, GPIO.BOTH, callback=my_callback)
     
-    led = GPIO.PWM(12, 100)
+    led = GPIO.PWM(12, 200)
     print ("Incio\n")
     led.start(0)
+    led.ChangeDutyCycle(50)
     
-    while True:
-        for i in range(0, 100, 1):
+    message = raw_input('\nPress any key to exit.\n')
+
+    """for i in range(0, 100, 1):
             led.ChangeDutyCycle(i)
             time.sleep(1)
             if (i == 100):
-                i = 0
+                i = 0"""
+
 finally:
     GPIO.cleanup()
+
+    print ("HIGH\n")
+    for i in range(len(high)):
+        print(high[i])
+        
+    print ("LOW\n")
+    for i in range(len(low)):
+        print(low[i])
+        
     print("Goodbye!")
