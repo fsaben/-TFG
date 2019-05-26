@@ -2,7 +2,6 @@ import bluetooth
 import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setwarnings(False)
 GPIO.setup(3, GPIO.OUT)
 GPIO.setup(5, GPIO.OUT)
 GPIO.setup(6, GPIO.OUT)
@@ -32,6 +31,8 @@ def Leds():
         if data == "q":
             print("Bluetooth Disconnected\n\n")
             GPIO.output(3, 0)
+            GPIO.output(5, 0)
+            GPIO.output(6, 0)
             break
 
 #Main Loop
