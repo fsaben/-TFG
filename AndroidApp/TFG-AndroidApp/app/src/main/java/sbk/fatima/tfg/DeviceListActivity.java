@@ -95,7 +95,7 @@ public class DeviceListActivity extends Activity {
         // Check device has Bluetooth and that it is turned on
         mBtAdapter=BluetoothAdapter.getDefaultAdapter(); // CHECK THIS OUT THAT IT WORKS!!!
         if(mBtAdapter==null) { 
-        	System.out.println("El dispositivo no soporta Bluetooth");
+        	System.out.println("This device doesn't have Bluetooth");
         } else {
             if (mBtAdapter.isEnabled()) {
             } else {
