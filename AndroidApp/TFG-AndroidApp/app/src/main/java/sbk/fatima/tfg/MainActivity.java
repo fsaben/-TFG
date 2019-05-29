@@ -149,7 +149,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             btSocket = createBluetoothSocket(device);
             System.out.println("Socket created");
         } catch (IOException e) {
-            System.out.println("Socket creation failed");
+            System.out.println("La creacción del Socket fallo");
             System.out.println("Error: " + e);
         }
         // Establish the Bluetooth socket connection.
@@ -236,21 +236,21 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         } else {
             //update speed
             speed = location.getSpeed();
-            currentSpeed.setText(String.format("%.2f", speed)); //print speed with 2 decimals
+            currentSpeed.setText(String.format("%.2f", speed)); //imprimir velocidad con 2 decimales
 
-            if (speed > 1.3 && !speedState) {
+            if (speed > 1.3 && !speedState) {//PONER A 1.3
                 mConnectedThread.write("t");
                 speedState = true;
             } else if (speedState) {
                 mConnectedThread.write("f");
                 speedState = false;
             }
-            System.out.println("Speed is " + speed + " speedState is " + speedState);
+            System.out.println("Speed es " + speed + " speedState es " + speedState);
 
             //update map
             currentposition = new LatLng(location.getLatitude(), location.getLongitude());
             //mMap.addMarker(new MarkerOptions().position(currentposition).title("Marker in current position"));
-            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentposition, 17));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentposition, 17));
 
             updateTrack(currentposition);
         }
@@ -263,12 +263,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onProviderEnabled(String provider) {
-        System.out.println("Gps is active");
+        System.out.println("Gps activo");
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        System.out.println("Gps disabled");
+        System.out.println("Gps desactivado");
         checkGpsState();
     }
 
@@ -319,7 +319,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 mmOutStream.write(msgBuffer);                //write bytes over BT connection via outstream
             } catch (IOException e) {
                 //if you cannot write, close the application
-                System.out.println("Connection failed");
+                System.out.println("La Conexión fallo");
                 finish();
             }
         }
