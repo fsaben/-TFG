@@ -149,7 +149,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             btSocket = createBluetoothSocket(device);
             System.out.println("Socket created");
         } catch (IOException e) {
-            System.out.println("Connection failed");
+            System.out.println("Socket creation failed");
             System.out.println("Error: " + e);
         }
         // Establish the Bluetooth socket connection.
@@ -314,9 +314,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
         //write method
         public void write(String input) {
-            byte[] msgBuffer = input.getBytes();           //converts entered String into bytes
+            byte[] msgBuffer = input.getBytes();//converts entered String into bytes
             try {
-                mmOutStream.write(msgBuffer);                //write bytes over BT connection via outstream
+                mmOutStream.write(msgBuffer);//write bytes over BT connection via outstream
             } catch (IOException e) {
                 //if you cannot write, close the application
                 System.out.println("Connection failed");
